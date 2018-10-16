@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>handwriting</title>
+    <meta charset='utf-8'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+
+<body>
+	<div class="jumbotron">
+	<canvas id="can" height="300" width="700" style="border: 2px solid; cursor: crosshair;"></canvas>
+	<button type="button" id="send" class="btn btn-success">Convert</button>
+
+	<button type="button" id="erase" class="btn btn-primary">Erase</button>
+<button type="button" id="undo" class="btn btn-secondary">Undo</button>
+<button type="button" id="redo" class="btn btn-danger">Redo</button>
+<h3 id="res"></h3>
+</div>
+<script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="./handwriting.canvas.js"></script>
+
+<script>
+    var can1 = new handwriting.Canvas(document.getElementById("can"));
+
+    can1.setCallBack(function(data, err) {
+        if(err) throw err;
+        else showText(data);
+    });
+
+    function showText(data){
+    	$("#res").text(data)
+    }
+
+        //Set options
+    can1.setOptions(
+        {
+            language: "en",
+            numOfReturn: 3
+        }
+    );
+
+    //recognize captured trace
+    
+    $( "#send" ).click(function() {
+  can1.recognize();
+});
+
+    //Clear canvas, captured trace, and stored steps
+    
+        $( "#erase" ).click(function() {
+can1.erase();
+$("#res").text("")
+});
+
+    //turn on both functionalities
+    can1.set_Undo_Redo(true, true);
+
+    $( "#undo" ).click(function() {
+  can1.undo();
+});
+     
+    //set canvas and stored trace to the last state (stroke)
+
+    $( "#redo" ).click(function() {
+  can1.redo();
+});
+    
+    //if there are undo records, return to the state of the next stored step
+</script>
+</body>
+</html>
